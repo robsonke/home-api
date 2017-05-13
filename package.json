@@ -1,0 +1,52 @@
+{
+  "name": "home-automation-api",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node ./build/app/app.js",
+    "predev": "npm run clean",
+    "dev": "concurrently \"npm run tsc-watch\" \"npm run nodemon\"",
+    "prenodemon": "wait-on ./build/app/app.js",
+    "nodemon": "nodemon -r dotenv/config --delay 1500ms --watch dev.env --watch ./build \"./build/app/app.js\" dotenv_config_path=dev.env",
+    "tsc-watch": "tsc -w",
+    "lint": "tslint -c tslint.json \"./src/**/*.ts\""
+  },
+  "keywords": [],
+  "author": "Rob Sonke",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "core-js": "2.4.1",
+    "debug": "^2.6.6",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
+    "morgan": "^1.8.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "serialize-error": "2.1.0",
+    "urijs": "^1.18.10",
+    "winston": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "1.16.3",
+    "@types/debug": "0.0.29",
+    "@types/express": "^4.0.35",
+    "@types/morgan": "^1.7.32",
+    "@types/node": "^7.0.18",
+    "@types/request": "0.0.43",
+    "@types/request-promise": "^4.1.33",
+    "@types/urijs": "^1.15.32",
+    "concurrently": "3.4.0",
+    "dotenv": "4.0.0",
+    "nodemon": "^1.11.0",
+    "rimraf": "2.5.4",
+    "tslint": "3.15.1",
+    "typescript": "^2.3.2",
+    "typings": "^2.1.1",
+    "wait-on": "1.5.3"
+  }
+}
