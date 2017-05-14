@@ -9,21 +9,34 @@ export class DomoticzService {
 
   constructor(private appConfig: AppConfig) { }
 
-  public getAllDevices(): Promise<any> {
-    return this.doRequest([{ type: 'devices' }]);
-  }
-
   public getDevice(id: number): Promise<any> {
     return this.doRequest([{ type: 'devices' }, { rid: id }]);
   }
 
-  public getLightSwitches(): Promise<any> {
-    return this.doRequest([{ type: 'devices', filter: 'light', used: 'true', order: 'Name' }]);
+  /**
+   * @param filter can be `light`, `weather`, `temperature`, `utility`
+   * @param used true or false or empty but we don't use that
+   * @param order any field which you'd like to order by
+   */
+  public getDevices(filter: string = 'all', used: boolean = true, favorite: boolean = null, order: string = 'Name') {
+    let params: Array<any> = [{
+      filter: filter,
+      used: used,
+      order: order,
+      type: 'devices'
+    }];
+
+    if (favorite != null) {
+      params.push({ favorite: ((favorite) ? 1 : 0) });
+    }
+
+    return this.doRequest(params);
   }
 
+
   /**
-   * Status can be: On/Off/Toggle
-   * Type: switch or dimmable
+   * @param status can be On/Off/Toggle or in case of a dimmable it's a number between 0 and 100
+   * @param type can be switch or dimmable
    */
   public setLightSwitch(id: number, status: string, type: string): Promise<any> {
     let params: Array<any> = [{ type: 'command' }, { idx: id }];
@@ -37,6 +50,22 @@ export class DomoticzService {
     status === 'off' ? status = 'Off' : this;
 
     params.push({ switchcmd: status });
+
+    return this.doRequest(params);
+  }
+
+  /**
+   * @param id the device id
+   * @param value new temperature as a float
+   */
+  public setTemperature(id: number, value: number): Promise<any> {
+    let params: Array<any> = [
+      { type: 'command' },
+      { idx: id },
+      { param: 'udevice' },
+      { svalue: value },
+      { nvalue: '0' }
+    ];
 
     return this.doRequest(params);
   }

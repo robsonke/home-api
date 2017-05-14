@@ -11,7 +11,7 @@ export class DomoticzController extends RestController {
   getAllDevices = (req, res, next): Promise<any> => {
     DomoticzController.LOGGER.debug('Retrieving all devices');
 
-    return this.domoticzService.getAllDevices()
+    return this.domoticzService.getDevices()
       .then((devices: any) => {
         this.respondPlain(res, devices);
       });
@@ -28,7 +28,7 @@ export class DomoticzController extends RestController {
   getLightSwitches = (req, res, next): Promise<any> => {
     DomoticzController.LOGGER.debug('Retrieving all light switches');
 
-    return this.domoticzService.getLightSwitches()
+    return this.domoticzService.getDevices('light')
       .then((switches: any) => {
         this.respondPlain(res, switches);
       });
@@ -38,6 +38,24 @@ export class DomoticzController extends RestController {
     DomoticzController.LOGGER.debug('Turn on/off lights, id: ' + req.params.id + ', status: ' + req.params.status);
 
     return this.domoticzService.setLightSwitch(req.params.id, req.params.status, 'switch')
+      .then((status: any) => {
+        this.respondPlain(res, status);
+      });
+  }
+
+  getTemperatures = (req, res, next): Promise<any> => {
+    DomoticzController.LOGGER.debug('Retrieving all temperature devices');
+
+    return this.domoticzService.getDevices('temperature')
+      .then((switches: any) => {
+        this.respondPlain(res, switches);
+      });
+  }
+
+  setTemperature = (req, res, next): Promise<any> => {
+    DomoticzController.LOGGER.debug('Set the temperature, id: ' + req.params.id + ', temperature: ' + req.params.temperature);
+
+    return this.domoticzService.setTemperature(req.params.id, req.params.temperature)
       .then((status: any) => {
         this.respondPlain(res, status);
       });
