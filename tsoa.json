@@ -1,0 +1,12 @@
+{
+    "swagger": {
+        "outputDirectory": "./build",
+        "entryFile": "./src/app/api/api-router-factory.ts",
+        "host": "localhost:3000",
+        "version": "1.0",
+        "name": "tsoa app",
+        "description": "a description",
+        "license": "MIT",
+        "basePath": "/v1"
+    }
+}

@@ -1,5 +1,6 @@
 let request = require('request-promise');
 import { Logger, LoggerFactory } from '../common';
+import { Device } from '../api/domain/device-domain';
 import * as URI from 'urijs';
 import { AppConfig } from '../config';
 
@@ -18,7 +19,7 @@ export class DomoticzService {
    * @param used true or false or empty but we don't use that
    * @param order any field which you'd like to order by
    */
-  public getDevices(filter: string = 'all', used: boolean = true, favorite: boolean = null, order: string = 'Name') {
+  public getDevices(filter: string = 'all', used: boolean = true, favorite: boolean = null, order: string = 'Name'): Promise<Device> {
     let params: Array<any> = [{
       filter: filter,
       used: used,

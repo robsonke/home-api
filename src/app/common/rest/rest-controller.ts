@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import {Get, Post, Route, Body, Query, Header, Path, SuccessResponse, Controller } from 'tsoa';
 
-export class RestController {
-  constructor() { }
+export class RestController extends Controller {
+  constructor() { super(); }
 
   respond(res: Response, item: any | Array<any>, statusCode: number = 200): Response {
     return res.status(statusCode).json(item);
