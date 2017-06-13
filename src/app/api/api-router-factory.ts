@@ -16,7 +16,7 @@ export class ApiRouterFactory {
 
     const domoticzRouter: Router = new DomoticzRouter(new DomoticzService(appConfig)).router;
 
-    ApiRouterFactory.LOGGER.info('Mounting domoticz route');
+    ApiRouterFactory.LOGGER.info('Mounting domoticz routes');
 
     router.use('/domoticz', domoticzRouter);
 

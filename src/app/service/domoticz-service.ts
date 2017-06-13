@@ -10,7 +10,7 @@ export class DomoticzService {
 
   constructor(private appConfig: AppConfig) { }
 
-  public getDevice(id: number): Promise<any> {
+  public getDevice(id: number): Promise<Device> {
     return this.doRequest([{ type: 'devices' }, { rid: id }]);
   }
 
@@ -19,7 +19,7 @@ export class DomoticzService {
    * @param used true or false or empty but we don't use that
    * @param order any field which you'd like to order by
    */
-  public getDevices(filter: string = 'all', used: boolean = true, favorite: boolean = null, order: string = 'Name'): Promise<Device> {
+  public getDevices(filter: string = 'all', used: boolean = true, favorite: boolean = null, order: string = 'Name'): Promise<Array<Device>> {
     let params: Array<any> = [{
       filter: filter,
       used: used,
@@ -39,7 +39,7 @@ export class DomoticzService {
    * @param status can be On/Off/Toggle or in case of a dimmable it's a number between 0 and 100
    * @param type can be switch or dimmable
    */
-  public setLightSwitch(id: number, status: string, type: string): Promise<any> {
+  public setLightSwitch(id: number, status: string, type: string): Promise<Device> {
     let params: Array<any> = [{ type: 'command' }, { idx: id }];
 
     type === 'switch' ? params.push({ param: 'switchlight' }) : this;
@@ -59,7 +59,7 @@ export class DomoticzService {
    * @param id the device id
    * @param value new temperature as a float
    */
-  public setTemperature(id: number, value: number): Promise<any> {
+  public setTemperature(id: number, value: number): Promise<Device> {
     let params: Array<any> = [
       { type: 'command' },
       { idx: id },
@@ -71,7 +71,7 @@ export class DomoticzService {
     return this.doRequest(params);
   }
 
-  private doRequest(params: Array<any>): Promise<any> {
+  private doRequest(params: Array<any>): any {
     let url: uri.URI = this.getUrl();
     params.forEach((param) => url.addSearch(param));
 

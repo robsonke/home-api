@@ -1,155 +1,117 @@
 import { DomoticzService } from './../../../service/domoticz-service';
 import { Logger, LoggerFactory, RestController } from '../../../common';
-import {Device} from '../../domain/device-domain';
-import {Get, Post, Route, Body, Query, Header, Path, SuccessResponse, Controller } from 'tsoa';
+import { Device } from '../../domain/device-domain';
 import { Request, Response } from 'express';
 
-@Route('domoticz')
+/**
+ * @controller Domoticz
+ * @baseUrl /api/domoticz
+ */
 export class DomoticzController extends RestController {
   private static readonly LOGGER: Logger = LoggerFactory.getLogger();
 
-  // respond(res: Response, item: any | Array<any>, statusCode: number = 200): Response {
-  //   return res.status(statusCode).json(item);
-  // }
-  //
-  // respondPlain(res: Response, item: any | Array<any>, statusCode: number = 200): Response {
-  //   res.set('Content-Type', 'application/json');
-  //   return res.status(statusCode).send(item);
-  // }
-  //
-  // respondNoContent(res: Response, statusCode: number = 204): Response {
-  //   return res.status(statusCode).json();
-  // }
-  // 
   constructor(private domoticzService: DomoticzService) {
     super();
   }
 
-  /**
-   * @swagger
-   * definition:
-   *   Device:
-   *     properties:
-   *       name:
-   *         type: string
-   *       idx:
-   *         type: integer
-   */
 
   /**
-   * @swagger
-   * /devices:
-   *   get:
-   *     tags:
-   *       - Domoticz
-   *     description: Returns all devices
-   *     produces:
-   *       - application/json
-   *     responses:
-   *       200:
-   *         description: An array of devices
-   *         schema:
-   *           $ref: '#/definitions/Device'
+   * Get all devices
+   * @httpGet /api/domoticz/devices
+   * @httpResponse 200 [{Device}]
    */
-
-
-
-
-
-  /**
-   * Get project definition
-   * @httpGet /projects/{title}
-   * @httpPath title {string} name of the project
-   * @httpQuery ?version {string} specify a version
-   * @httpQuery ?env {string} environment to find the project definition
-   * @httpResponse 200 {Project}
-   * @httpResponse 400 the environment doesn't exists
-   * @httpResponse 404 Project definitions for the given title/version/env doesn't exists
-   */
-  @Get('devices')
-  public getAllDevices(): Promise<Device> {
+  public getAllDevices(request: Request, response: Response): Promise<Response> {
     DomoticzController.LOGGER.debug('Retrieving all devices');
 
     return this.domoticzService.getDevices()
-      .then((devices: any) => {
-        this.respondPlain(res, devices);
+      .then((device: any) => {
+        return this.respondPlain(response, device);
       });
   }
-  // getAllDevices = (req, res, next): Promise<any> => {
-  //   DomoticzController.LOGGER.debug('Retrieving all devices');
-  //
-  //   return this.domoticzService.getDevices()
-  //     .then((devices: any) => {
-  //       this.respondPlain(res, devices);
-  //     });
-  // }
 
   /**
-   * @swagger
-   * /devices/id:
-   *   get:
-   *     tags:
-   *       - Domoticz
-   *     description: Returns all devices
-   *     produces:
-   *       - application/json
-   *     responses:
-   *       200:
-   *         description: An array of devices
-   *         schema:
-   *           $ref: '#/definitions/Device'
+   * Get one device
+   * @httpGet /api/domoticz/devices/{id}
+   * @httpPath id {number} id of the device
+   * @httpResponse 200 {Device}
    */
-  @Get('{id}')
-  getDevice = (req, res, next): any => {
+  public getDevice(request: Request, response: Response): Promise<Response> {
     DomoticzController.LOGGER.debug('Retrieving one device');
-    return this.domoticzService.getDevice(req.params.id)
+    return this.domoticzService.getDevice(request.params.id)
       .then((device: any) => {
-        return this.respondPlain(res, device);
+        return this.respondPlain(response, device);
       });
   }
 
-  getLightSwitches = (req, res, next): Promise<any> => {
+  /**
+   * Get all light switches
+   * @httpGet /api/domoticz/devices/lights/switches
+   * @httpResponse 200 [{Device}]
+   */
+  public getLightSwitches(request: Request, response: Response): Promise<Response> {
     DomoticzController.LOGGER.debug('Retrieving all light switches');
 
     return this.domoticzService.getDevices('light')
       .then((switches: any) => {
-        this.respondPlain(res, switches);
+        return this.respondPlain(response, switches);
       });
   }
 
-  setLightSwitch = (req, res, next): Promise<any> => {
-    DomoticzController.LOGGER.debug('Turn on/off lights, id: ' + req.params.id + ', status: ' + req.params.status);
+  /**
+   * Set light switches on/off
+   * @httpPut /api/domoticz/devices/lights/switches/{id}/{status}
+   * @httpPath id {number} id of the device
+   * @httpPath status {string} on or off
+   */
+  public setLightSwitch(request: Request, response: Response): Promise<void> {
+    DomoticzController.LOGGER.debug('Turn on/off lights, id: ' + request.params.id + ', status: ' + request.params.status);
 
-    return this.domoticzService.setLightSwitch(req.params.id, req.params.status, 'switch')
+    return this.domoticzService.setLightSwitch(request.params.id, request.params.status, 'switch')
       .then((status: any) => {
-        this.respondPlain(res, status);
+        this.respondPlain(response, status);
       });
   }
 
-  getTemperatures = (req, res, next): Promise<any> => {
+  /**
+   * Get all temperature devices
+   * @httpGet /api/domoticz/devices/temperatures
+   */
+  public getTemperatures(request: Request, response: Response): Promise<Response> {
     DomoticzController.LOGGER.debug('Retrieving all temperature devices');
 
     return this.domoticzService.getDevices('temperature')
       .then((switches: any) => {
-        this.respondPlain(res, switches);
+        return this.respondPlain(response, switches);
       });
   }
 
-  setTemperature = (req, res, next): Promise<any> => {
-    DomoticzController.LOGGER.debug('Set the temperature, id: ' + req.params.id + ', temperature: ' + req.params.temperature);
+  /**
+   * Set the temperature
+   * @httpPut /api/domoticz/devices/temperatures/{id}/{temperature}
+   * @httpPath id {number} id of the device
+   * @httpPath temperature {temperature} the new temperature
+   */
+  public setTemperature(request: Request, response: Response): Promise<void> {
+    DomoticzController.LOGGER.debug('Set the temperature, id: ' + request.params.id + ', temperature: ' + request.params.temperature);
 
-    return this.domoticzService.setTemperature(req.params.id, req.params.temperature)
+    return this.domoticzService.setTemperature(request.params.id, request.params.temperature)
       .then((status: any) => {
-        this.respondPlain(res, status);
+        this.respondPlain(response, status);
       });
   }
 
-  setLightLevel = (req, res, next): Promise<any> => {
-    DomoticzController.LOGGER.debug('Change dimmable level of a light, id: ' + req.params.id + ', level: ' + req.params.status);
+  /**
+   * Set light switches at a specific dim value
+   * @httpPut /api/domoticz/devices/lights/dimmable/{id}/{level}
+   * @httpPath id {number} id of the device
+   * @httpPath level {level} level between 0 and 100
+   */
+  public setLightLevel(request: Request, response: Response): Promise<void> {
+    DomoticzController.LOGGER.debug('Change dimmable level of a light, id: ' + request.params.id + ', level: ' + request.params.status);
 
-    return this.domoticzService.setLightSwitch(req.params.id, req.params.status, 'dimmable')
+    return this.domoticzService.setLightSwitch(request.params.id, request.params.status, 'dimmable')
       .then((status: any) => {
-        this.respondPlain(res, status);
+        this.respondPlain(response, status);
       });
   }
 

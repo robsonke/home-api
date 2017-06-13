@@ -20,35 +20,12 @@ export class ExpressAppFactory {
 
     const app: Express = express();
 
-    // add Swagger specs
-    // let swaggerDefinition = {
-    //   info: {
-    //     title: 'Home Automation API',
-    //     version: '0.1.0',
-    //     description: 'Highly opiniated custom project to control all kind of home automation.',
-    //   },
-    //   host: 'localhost:3000',
-    //   basePath: '/api',
-    // };
-    // let options = {
-    //   swaggerDefinition: {
-    //     info: {
-    //       title: 'Home Automation API',
-    //       version: '0.1.0',
-    //       description: 'Highly opiniated custom project to control all kind of home automation.',
-    //     },
-    //   },
-    //   apis: ['/app/api/routes/domoticz/*.js'],
-    // };
-    //
-    // // initialize swagger-jsdoc
-    // let swaggerSpec = swaggerJSDoc(options);
-    //
-    // // serve swagger
-    // app.get('/swagger.json', function(req, res) {
-    //   res.setHeader('Content-Type', 'application/json');
-    //   res.send(swaggerSpec);
-    // });
+    // swagger ui
+    const swaggerUi = require('swagger-ui-express');
+    const swaggerDocument = require('./swagger.json');
+
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
     // add bodyParser as middleware
     app.use(bodyParser.urlencoded({ extended: true }));
