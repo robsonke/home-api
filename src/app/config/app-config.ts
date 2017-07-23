@@ -8,6 +8,7 @@ export class AppConfig {
   domoticzUrl: string;
   domoticzUser: string;
   domoticzPassword: string;
+  macosAudioApi: string;
 
   // optional environment variables
   enableHttpRequestLogging: boolean;
@@ -20,6 +21,7 @@ export class AppConfig {
     this.domoticzUrl = this.getStringEnvVar('DOMOTICZ_URL');
     this.domoticzUser = this.getStringEnvVar('DOMOTICZ_USER');
     this.domoticzPassword = this.getStringEnvVar('DOMOTICZ_PASSWORD');
+    this.macosAudioApi = this.getStringEnvVar('MACOS_AUDIO_API');
 
     // optional environment variables
     this.enableHttpRequestLogging = this.getBooleanEnvVar('ENABLE_HTTP_REQUEST_LOGGING', false);
