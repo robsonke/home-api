@@ -44,4 +44,27 @@ export class AirfoilController extends RestController {
       });
   }
 
+  /**
+   * Set the system source, normally: System Audio
+   * @httpPut /api/airfoil/syssource/{name}
+   * @httpPath name {string} the name of the system source
+   */
+  public setSysSource(request: Request, response: Response): Promise<Response> {
+    return this.airfoilService.setSysSource(request.params.name)
+      .then((result: any) => {
+        return this.respondPlain(response, result);
+      });
+  }
+
+  /**
+   * Set the application source, e.g.: Vox or Itunes
+   * @httpPut /api/airfoil/appsource/{name}
+   * @httpPath name {string} the name of the application source
+   */
+  public setAppSource(request: Request, response: Response): Promise<Response> {
+    return this.airfoilService.setAppSource(request.params.name)
+      .then((result: any) => {
+        return this.respondPlain(response, result);
+      });
+  }
 }
