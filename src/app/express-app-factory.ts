@@ -23,8 +23,10 @@ export class ExpressAppFactory {
     // swagger ui
     const swaggerUi = require('swagger-ui-express');
     const swaggerDocument = require('./swagger.json');
-
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    let options = {
+      validatorUrl: null
+    };
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true, options));
 
 
     // add bodyParser as middleware

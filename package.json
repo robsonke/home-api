@@ -8,7 +8,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node ./build/app/app.js",
-    "gen-swagger": "microdocs export -f swagger  -c ~/projects/home-api/tsconfig.json --no-cache --definitionFile build/microdocs.json --outputFile build/app/swagger.json -t '/**/*-controller.ts,!/node_modules/**'",
+    "gen-swagger": "microdocs export -f swagger -c $PWD/tsconfig.json --no-cache --definitionFile build/microdocs.json --outputFile build/app/swagger.json -t '/**/*-controller.ts,!/node_modules/**'",
     "predev": "npm run clean",
     "dev": "concurrently \"npm run tsc-watch\" \"npm run nodemon\"",
     "prenodemon": "wait-on ./build/app/app.js",
