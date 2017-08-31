@@ -1,6 +1,6 @@
 import express = require('express');
 import { Router } from 'express';
-import { DomoticzService, AirfoilService, VolumeService } from '../service';
+import { DomoticzService, DomoticzMQTTService, AirfoilService, VolumeService } from '../service';
 import { DomoticzRouter } from './routes/domoticz/domoticz-router';
 import { AirfoilRouter } from './routes/airfoil/airfoil-router';
 import { VolumeRouter } from './routes/volume/volume-router';
@@ -13,10 +13,10 @@ export class ApiRouterFactory {
 
   private constructor() { }
 
-  static getApiRouter(appConfig: AppConfig): Router {
+  static getApiRouter(appConfig: AppConfig, domoticzMQTTService: DomoticzMQTTService): Router {
     const router: Router = express.Router();
 
-    const domoticzRouter: Router = new DomoticzRouter(new DomoticzService(appConfig)).router;
+    const domoticzRouter: Router = new DomoticzRouter(new DomoticzService(appConfig), domoticzMQTTService).router;
     const airfoilRouter: Router = new AirfoilRouter(new AirfoilService(appConfig)).router;
     const volumeRouter: Router = new VolumeRouter(new VolumeService(appConfig)).router;
 

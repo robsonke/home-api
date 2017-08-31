@@ -3,8 +3,10 @@ import { AppConfig } from './config';
 import express = require('express');
 import bodyParser = require('body-parser');
 import morgan = require('morgan');
-import * as swaggerJSDoc from 'swagger-jsdoc';
+import { ApiRouterFactory } from './api';
 import { Logger, LoggerFactory } from './common';
+import { DomoticzMQTTService } from './service/domoticz-mqtt-service'
+
 
 export class ExpressAppFactory {
 
@@ -14,11 +16,21 @@ export class ExpressAppFactory {
 
   static getExpressApp(
     appConfig: AppConfig,
-    apiRouter: Router,
     preApiRouterMiddlewareFns: Array<RequestHandler | ErrorRequestHandler>,
     postApiRouterMiddlewareFns: Array<RequestHandler | ErrorRequestHandler>): Express {
 
     const app: Express = express();
+
+    // initiate mqtt client
+    let mqttOptions = {
+    	host: appConfig.domoticzMQTTUrl
+    };
+    let domoticzMQTTService = new DomoticzMQTTService(mqttOptions);
+    domoticzMQTTService.connect();
+
+
+    // Create the application router (to be mounted by the express server)
+    const apiRouter: Router = ApiRouterFactory.getApiRouter(appConfig, domoticzMQTTService);
 
     // swagger ui
     const swaggerUi = require('swagger-ui-express');

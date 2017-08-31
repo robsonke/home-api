@@ -1,14 +1,14 @@
 import { RestRouter } from '../../../common';
 import { DomoticzController } from './domoticz-controller';
-import { DomoticzService } from '../../../service/domoticz-service';
+import { DomoticzService, DomoticzMQTTService } from '../../../service';
 import { Request, Response } from 'express';
 
 export class DomoticzRouter extends RestRouter {
   domoticzCtrl: DomoticzController;
 
-  constructor(domoticzService: DomoticzService) {
+  constructor(domoticzService: DomoticzService, domoticzMQTTService :DomoticzMQTTService) {
     super();
-    this.domoticzCtrl = new DomoticzController(domoticzService);
+    this.domoticzCtrl = new DomoticzController(domoticzService, domoticzMQTTService);
     this.initRoutes();
   }
 

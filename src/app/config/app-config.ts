@@ -6,6 +6,7 @@ export class AppConfig {
   logLevel: string; // 'debug' | 'verbose' | 'info' | 'warn' | 'error';
   serveStatic: boolean;
   domoticzUrl: string;
+  domoticzMQTTUrl: string;
   domoticzUser: string;
   domoticzPassword: string;
   macosAudioApi: string;
@@ -19,6 +20,7 @@ export class AppConfig {
     this.logLevel = this.getStringEnvVar('LOG_LEVEL');
     this.serveStatic = this.getBooleanEnvVar('SERVE_STATIC');
     this.domoticzUrl = this.getStringEnvVar('DOMOTICZ_URL');
+    this.domoticzMQTTUrl = this.getStringEnvVar('DOMOTICZ_MQTT_URL');
     this.domoticzUser = this.getStringEnvVar('DOMOTICZ_USER');
     this.domoticzPassword = this.getStringEnvVar('DOMOTICZ_PASSWORD');
     this.macosAudioApi = this.getStringEnvVar('MACOS_AUDIO_API');

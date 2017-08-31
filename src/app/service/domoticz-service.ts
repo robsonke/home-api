@@ -3,9 +3,10 @@ import { Logger, LoggerFactory } from '../common';
 import { Device } from '../api/domain/device-domain';
 import * as URI from 'urijs';
 import { AppConfig } from '../config';
+import { BaseDomoticzService } from './base-domoticz-service';
 
 
-export class DomoticzService {
+export class DomoticzService implements BaseDomoticzService {
   private static readonly LOGGER: Logger = LoggerFactory.getLogger();
 
   constructor(private appConfig: AppConfig) { }
@@ -36,6 +37,7 @@ export class DomoticzService {
 
 
   /**
+   * @param id the idx of the device
    * @param status can be On/Off/Toggle or in case of a dimmable it's a number between 0 and 100
    * @param type can be switch or dimmable
    */
@@ -45,7 +47,7 @@ export class DomoticzService {
     type === 'switch' ? params.push({ param: 'switchlight' }) : this;
     type === 'dimmable' ? status = 'Set%20Level&level=' + (Number(status) / 100) * 16 : this;
 
-    // ugle capitals
+    // ugly capitals
     status === 'toggle' ? status = 'Toggle' : this;
     status === 'on' ? status = 'On' : this;
     status === 'off' ? status = 'Off' : this;

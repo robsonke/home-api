@@ -17,6 +17,12 @@
         },
         "typeRoots": [
           "./node_modules/@types"
+        ],
+        "types": [
+          "mqtt",
+          "request",
+          "request-promise",
+          "express"
         ]
     },
     "include": [
