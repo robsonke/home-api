@@ -96,8 +96,8 @@ export class DomoticzMQTTService implements BaseDomoticzService {
     //this.client.subscribe(DomoticzMQTTService.DMTCZ_TOPIC_OUT);
   }
 
-  public onReconnect():void {
-    DomoticzMQTTService.LOGGER.info('reconnect');
+  public onReconnect(): void {
+    //DomoticzMQTTService.LOGGER.info('reconnect');
   }
 
   public onMessage(...args: any[]):void {

@@ -41,8 +41,18 @@ export class ExpressAppFactory {
     };
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true, options));
     
+    let corsOptions = {
+      "origin": "*",
+      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "preflightContinue": false,
+      "optionsSuccessStatus": 204,
+      "allowedHeaders": ['Content-Type', 'Authorization']
+    };
+
     // enable cors for all routes
-    app.use(cors());
+    app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions));
+
 
     // add bodyParser as middleware
     app.use(bodyParser.urlencoded({ extended: true }));
