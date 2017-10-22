@@ -112,7 +112,7 @@ export class DomoticzMQTTService implements BaseDomoticzService {
   }
 
   public onError(error: any):void {
-    DomoticzMQTTService.LOGGER.errr('onError mqtt: ' + error);
+    DomoticzMQTTService.LOGGER.error('onError mqtt: ' + error);
   }
 
 
