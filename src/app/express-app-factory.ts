@@ -1,6 +1,7 @@
 import { Express, Router, RequestHandler, ErrorRequestHandler } from 'express';
 import { AppConfig } from './config';
 import express = require('express');
+import cors = require('cors');
 import bodyParser = require('body-parser');
 import morgan = require('morgan');
 import { ApiRouterFactory } from './api';
@@ -39,7 +40,9 @@ export class ExpressAppFactory {
       validatorUrl: null
     };
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true, options));
-
+    
+    // enable cors for all routes
+    app.use(cors());
 
     // add bodyParser as middleware
     app.use(bodyParser.urlencoded({ extended: true }));
