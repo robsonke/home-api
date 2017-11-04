@@ -21,10 +21,3 @@ const app: Express = ExpressAppFactory.getExpressApp(appConfig, null, errorMiddl
 
 // store the app config in the express app
 app.set('config', appConfig);
-
-app.listen(appConfig.port, () => {
-  LOGGER.info(`Express server listening on port ${appConfig.port}`);
-});
-
-
-// Disclaimer: this is based on this nice setup seed: https://github.com/giannico/typescript-express-rest-seed

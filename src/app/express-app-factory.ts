@@ -6,8 +6,9 @@ import bodyParser = require('body-parser');
 import morgan = require('morgan');
 import { ApiRouterFactory } from './api';
 import { Logger, LoggerFactory } from './common';
-import { DomoticzMQTTService } from './service/domoticz-mqtt-service'
-
+import { DomoticzMQTTService } from './service/domoticz-mqtt-service';
+import red = require('node-red');
+import http = require('http');
 
 export class ExpressAppFactory {
 
@@ -21,14 +22,35 @@ export class ExpressAppFactory {
     postApiRouterMiddlewareFns: Array<RequestHandler | ErrorRequestHandler>): Express {
 
     const app: Express = express();
+    let server = http.createServer(app);
+
+    // https://github.com/node-red/node-red/blob/master/settings.js
+    const settings = {
+      httpAdminRoot: '/red',
+      httpNodeRoot: '/redapi',
+      userDir: '~/.node-red/',
+      functionGlobalContext: { }    // enables global context
+    };
+    // initialise the runtime with a server and settings
+    red.init(server, settings);
+    server.listen(appConfig.port, () => {
+      this.LOGGER.info(`Express server listening on port ${appConfig.port}`);
+    });
+
+    // serve the editor UI from /red
+    app.use(settings.httpAdminRoot, red.httpAdmin);
+
+    // serve the http nodes UI from /api
+    app.use(settings.httpNodeRoot, red.httpNode);
+    // and start node-red
+    red.start();
 
     // initiate mqtt client
     let mqttOptions = {
-    	host: appConfig.domoticzMQTTUrl
+      host: appConfig.domoticzMQTTUrl
     };
     let domoticzMQTTService = new DomoticzMQTTService(mqttOptions);
     domoticzMQTTService.connect();
-
 
     // Create the application router (to be mounted by the express server)
     const apiRouter: Router = ApiRouterFactory.getApiRouter(appConfig, domoticzMQTTService);
@@ -40,13 +62,13 @@ export class ExpressAppFactory {
       validatorUrl: null
     };
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true, options));
-    
+
     let corsOptions = {
-      "origin": "*",
-      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-      "preflightContinue": false,
-      "optionsSuccessStatus": 204,
-      "allowedHeaders": ['Content-Type', 'Authorization']
+      'origin': '*',
+      'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      'preflightContinue': false,
+      'optionsSuccessStatus': 204,
+      'allowedHeaders': ['Content-Type', 'Authorization']
     };
 
     // enable cors for all routes

@@ -1,4 +1,3 @@
-let request = require('request-promise');
 import { Logger, LoggerFactory } from '../common';
 import { Device } from '../api/domain/device-domain';
 import * as URI from 'urijs';

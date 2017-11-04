@@ -25,7 +25,8 @@ export class DomoticzController extends RestController {
 
     return this.domoticzService.getDevices()
       .then((device: any) => {
-        return this.respondPlain(response, device);
+        let devices = JSON.parse(device);
+        return this.respondPlain(response, devices.result);
       });
   }
 

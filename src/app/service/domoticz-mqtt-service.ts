@@ -11,7 +11,7 @@ export class DomoticzMQTTService implements BaseDomoticzService {
   private static readonly LOGGER: Logger = LoggerFactory.getLogger();
   private client: mqtt.Client;
 
-  private static DMTCZ_TOPIC_OUT: string = 'domoticz/out';
+  private static DMTCZ_TOPIC_OUT: string = 'domoticz/out/json';
   private static DMTCZ_TOPIC_IN: string = 'domoticz/in';
 
   constructor(private mqttOptions: any) { }
