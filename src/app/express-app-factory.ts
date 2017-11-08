@@ -9,6 +9,8 @@ import { Logger, LoggerFactory } from './common';
 import { DomoticzMQTTService } from './service/domoticz-mqtt-service';
 import red = require('node-red');
 import http = require('http');
+import * as basicAuth from 'express-basic-auth';
+
 
 export class ExpressAppFactory {
 
@@ -57,7 +59,20 @@ export class ExpressAppFactory {
 
     // swagger ui
     const swaggerUi = require('swagger-ui-express');
-    const swaggerDocument = require('./swagger.json');
+    let swaggerDocument = require('./swagger.json');
+
+    // append authentication information to the swagger specs
+    swaggerDocument.securityDefinitions = {
+      'basicAuth': {
+        'type': 'basic'
+      }
+    };
+    swaggerDocument.security = [
+      {
+        'basicAuth': [ ]
+      }
+    ];
+
     let options = {
       validatorUrl: null
     };
@@ -75,6 +90,13 @@ export class ExpressAppFactory {
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
 
+    // secure the api with basic auth
+    let user = {};
+    user[appConfig.apiUser] = appConfig.apiPassword;
+    app.use(basicAuth({
+      users: user,
+      unauthorizedResponse: 'Please add basic authentication.'
+    }));
 
     // add bodyParser as middleware
     app.use(bodyParser.urlencoded({ extended: true }));

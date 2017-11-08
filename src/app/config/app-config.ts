@@ -10,6 +10,10 @@ export class AppConfig {
   domoticzUser: string;
   domoticzPassword: string;
   macosAudioApi: string;
+  apiUser: string;
+  apiPassword: string;
+  mqttUser: string;
+  mqttPassword: string;
 
   // optional environment variables
   enableHttpRequestLogging: boolean;
@@ -24,6 +28,10 @@ export class AppConfig {
     this.domoticzUser = this.getStringEnvVar('DOMOTICZ_USER');
     this.domoticzPassword = this.getStringEnvVar('DOMOTICZ_PASSWORD');
     this.macosAudioApi = this.getStringEnvVar('MACOS_AUDIO_API');
+    this.apiUser = this.getStringEnvVar('API_USER');
+    this.apiPassword = this.getStringEnvVar('API_PASSWORD');
+    this.mqttUser = this.getStringEnvVar('MQTT_USER');
+    this.mqttPassword = this.getStringEnvVar('MQTT_PASSWORD');
 
     // optional environment variables
     this.enableHttpRequestLogging = this.getBooleanEnvVar('ENABLE_HTTP_REQUEST_LOGGING', false);
