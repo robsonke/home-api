@@ -112,7 +112,7 @@ export class ExpressAppFactory {
 
     if (appConfig.enableHttpRequestLogging) {
       ExpressAppFactory.LOGGER.info(`Request logging is enabled`);
-      let accessLogStream = fs.createWriteStream(path.join(__dirname, '/logs/access.log'), {flags: 'a'});
+      let accessLogStream = fs.createWriteStream(path.join(__dirname, '../../logs/access.log'), {flags: 'a'});
       app.use(morgan('combined', {stream: accessLogStream}));
     }
 
