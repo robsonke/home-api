@@ -12,6 +12,8 @@ export class AppConfig {
   macosAudioApi: string;
   apiUser: string;
   apiPassword: string;
+  adminUser: string;
+  adminPassword: string;
   mqttUser: string;
   mqttPassword: string;
 
@@ -30,6 +32,8 @@ export class AppConfig {
     this.macosAudioApi = this.getStringEnvVar('MACOS_AUDIO_API');
     this.apiUser = this.getStringEnvVar('API_USER');
     this.apiPassword = this.getStringEnvVar('API_PASSWORD');
+    this.adminUser = this.getStringEnvVar('ADMIN_USER');
+    this.adminPassword = this.getStringEnvVar('ADMIN_PASSWORD');
     this.mqttUser = this.getStringEnvVar('MQTT_USER');
     this.mqttPassword = this.getStringEnvVar('MQTT_PASSWORD');
 

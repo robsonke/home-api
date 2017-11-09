@@ -29,6 +29,17 @@ export class ExpressAppFactory {
     const app: Express = express();
     let server = http.createServer(app);
 
+    // secure the api with basic auth
+    let user = {};
+    user[appConfig.apiUser] = appConfig.apiPassword;
+    user[appConfig.adminUser] = appConfig.adminPassword;
+    app.use(basicAuth({
+      users: user,
+      unauthorizedResponse: 'Please add basic authentication.',
+      challenge: true,
+      realm: 'rjwJINWFapi'
+    }));
+
     const settings = {
       httpAdminRoot: '/red',
       httpNodeRoot: '/redapi',
@@ -92,14 +103,6 @@ export class ExpressAppFactory {
     // enable cors for all routes
     app.use(cors(corsOptions));
     app.options('*', cors(corsOptions));
-
-    // secure the api with basic auth
-    let user = {};
-    user[appConfig.apiUser] = appConfig.apiPassword;
-    app.use(basicAuth({
-      users: user,
-      unauthorizedResponse: 'Please add basic authentication.'
-    }));
 
     // add bodyParser as middleware
     app.use(bodyParser.urlencoded({ extended: true }));
