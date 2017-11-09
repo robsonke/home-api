@@ -29,6 +29,19 @@ export class ExpressAppFactory {
     const app: Express = express();
     let server = http.createServer(app);
 
+    let corsOptions = {
+      'origin': '*',
+      'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      'preflightContinue': false,
+      'optionsSuccessStatus': 204,
+      'allowedHeaders': ['Content-Type', 'Authorization']
+    };
+
+    // enable cors for all routes
+    // this is on purpose above the auth part, as this should be without auth
+    app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions));
+
     // secure the api with basic auth
     let user = {};
     user[appConfig.apiUser] = appConfig.apiPassword;
@@ -91,18 +104,6 @@ export class ExpressAppFactory {
       validatorUrl: null
     };
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, true, options));
-
-    let corsOptions = {
-      'origin': '*',
-      'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      'preflightContinue': false,
-      'optionsSuccessStatus': 204,
-      'allowedHeaders': ['Content-Type', 'Authorization']
-    };
-
-    // enable cors for all routes
-    app.use(cors(corsOptions));
-    app.options('*', cors(corsOptions));
 
     // add bodyParser as middleware
     app.use(bodyParser.urlencoded({ extended: true }));
