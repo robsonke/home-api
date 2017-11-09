@@ -9,6 +9,9 @@ import { Logger, LoggerFactory } from './common';
 import { DomoticzMQTTService } from './service/domoticz-mqtt-service';
 import red = require('node-red');
 import http = require('http');
+import path = require('path');
+import fs = require('fs');
+
 import * as basicAuth from 'express-basic-auth';
 
 
@@ -26,7 +29,6 @@ export class ExpressAppFactory {
     const app: Express = express();
     let server = http.createServer(app);
 
-    // https://github.com/node-red/node-red/blob/master/settings.js
     const settings = {
       httpAdminRoot: '/red',
       httpNodeRoot: '/redapi',
@@ -49,10 +51,11 @@ export class ExpressAppFactory {
 
     // initiate mqtt client
     let mqttOptions = {
-      host: appConfig.domoticzMQTTUrl
+      host: appConfig.domoticzMQTTUrl,
+      username: appConfig.mqttUser,
+      password: appConfig.mqttPassword
     };
     let domoticzMQTTService = new DomoticzMQTTService(mqttOptions);
-    domoticzMQTTService.connect();
 
     // Create the application router (to be mounted by the express server)
     const apiRouter: Router = ApiRouterFactory.getApiRouter(appConfig, domoticzMQTTService);
@@ -109,7 +112,8 @@ export class ExpressAppFactory {
 
     if (appConfig.enableHttpRequestLogging) {
       ExpressAppFactory.LOGGER.info(`Request logging is enabled`);
-      app.use(morgan('combined'));
+      let accessLogStream = fs.createWriteStream(path.join(__dirname, '/logs/access.log'), {flags: 'a'});
+      app.use(morgan('combined', {stream: accessLogStream}));
     }
 
     if (preApiRouterMiddlewareFns != null) {

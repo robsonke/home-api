@@ -35,7 +35,8 @@
     "serialize-error": "2.1.0",
     "swagger-ui-express": "^2.0.9",
     "urijs": "^1.18.10",
-    "winston": "2.2.0"
+    "winston": "2.2.0",
+    "winston-daily-rotate-file": "^1.7.2"
   },
   "devDependencies": {
     "@maxxton/microdocs-cli": "1.9.0",

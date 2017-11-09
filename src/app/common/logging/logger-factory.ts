@@ -1,5 +1,7 @@
 import winston = require('winston');
 import { LoggerInstance } from 'winston';
+require('winston-daily-rotate-file');
+
 
 export class LoggerFactory {
     private static logger: LoggerInstance;
@@ -16,7 +18,13 @@ export class LoggerFactory {
 
             LoggerFactory.logger = new winston.Logger({
                 transports: [
-                    new (winston.transports.Console)({ level: logLevel, raw: true })
+                    new (winston.transports.Console)({ level: logLevel, raw: true }),
+                    new (winston.transports.DailyRotateFile)({
+                        filename: './log',
+                        datePattern: 'logs/yyyy-MM-dd.',
+                        prepend: true,
+                        level: 'debug'
+                      })
                 ]
             });
         }

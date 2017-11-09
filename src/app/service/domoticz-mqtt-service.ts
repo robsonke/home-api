@@ -14,7 +14,9 @@ export class DomoticzMQTTService implements BaseDomoticzService {
   private static DMTCZ_TOPIC_OUT: string = 'domoticz/out/json';
   private static DMTCZ_TOPIC_IN: string = 'domoticz/in';
 
-  constructor(private mqttOptions: any) { }
+  constructor(private mqttOptions: any) {
+    this.connect();
+  }
 
   /**
    * @param id the idx of the device
@@ -27,16 +29,16 @@ export class DomoticzMQTTService implements BaseDomoticzService {
     status === 'on' ? status = 'On' : this;
     status === 'off' ? status = 'Off' : this;
 
-    let state:any = { };
+    let state: any = { };
 
-    if(type === 'switch')
-      state = { command: "switchlight", idx: +id, switchcmd: status };
-    if(type === 'dimmable')
-      state = { command: "switchlight", idx: +id, switchcmd: 'Set Level', level: (Number(status) / 100) * 16 };
+    if (type === 'switch')
+      state = { command: 'switchlight', idx: +id, switchcmd: status };
+    if (type === 'dimmable')
+      state = { command: 'switchlight', idx: +id, switchcmd: 'Set Level', level: (Number(status) / 100) * 16 };
 
     return new Promise<Device>(
       (resolve, reject) => {
-        let message:string = JSON.stringify(state);
+        let message: string = JSON.stringify(state);
         this.publish(message);
         resolve();
       }
@@ -56,11 +58,11 @@ export class DomoticzMQTTService implements BaseDomoticzService {
       { nvalue: '0' }
     ];
 
-    let state:any = { };
+    let state: any = { };
 
     return new Promise<Device>(
       (resolve, reject) => {
-        let message:string = JSON.stringify(state);
+        let message: string = JSON.stringify(state);
         this.publish(message);
         resolve();
       }
@@ -71,7 +73,7 @@ export class DomoticzMQTTService implements BaseDomoticzService {
   /* start of mqtt methods */
 
   public connect(): void {
-    this.client = mqtt.connect(this.mqttOptions.host);
+    this.client = mqtt.connect(this.mqttOptions.host, this.mqttOptions);
 
     this.client.addListener('connect', this.onConnect);
     this.client.addListener('reconnect', this.onReconnect);
@@ -93,25 +95,21 @@ export class DomoticzMQTTService implements BaseDomoticzService {
     DomoticzMQTTService.LOGGER.info('connect');
     this.client.publish('home-api/connected', 'true');
     // not listening for now as we don't use it
-    //this.client.subscribe(DomoticzMQTTService.DMTCZ_TOPIC_OUT);
+    // this.client.subscribe(DomoticzMQTTService.DMTCZ_TOPIC_OUT);
   }
 
   public onReconnect(): void {
-    //DomoticzMQTTService.LOGGER.info('reconnect');
   }
 
-  public onMessage(...args: any[]):void {
-    DomoticzMQTTService.LOGGER.debug('message');
+  public onMessage(...args: any[]): void {
     let topic = args[0];
     let message = args[1];
     let packet: mqtt.Packet = args[2];
 
-    // DomoticzMQTTService.LOGGER.info('message topic: ' + topic);
-    DomoticzMQTTService.LOGGER.info('message message: ' + message);
-    // DomoticzMQTTService.LOGGER.info('message packet: ' + packet);
+    DomoticzMQTTService.LOGGER.info('MQTT message: ' + message);
   }
 
-  public onError(error: any):void {
+  public onError(error: any): void {
     DomoticzMQTTService.LOGGER.error('onError mqtt: ' + error);
   }
 
