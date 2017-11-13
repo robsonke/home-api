@@ -34,7 +34,7 @@ export class DomoticzMQTTService implements BaseDomoticzService {
     if (type === 'switch')
       state = { command: 'switchlight', idx: +id, switchcmd: status };
     if (type === 'dimmable')
-      state = { command: 'switchlight', idx: +id, switchcmd: 'Set Level', level: (Number(status) / 100) * 16 };
+      state = { command: 'switchlight', idx: +id, switchcmd: 'Set Level', level: Number(status) };
 
     return new Promise<Device>(
       (resolve, reject) => {
