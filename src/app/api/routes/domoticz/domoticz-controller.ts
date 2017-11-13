@@ -103,14 +103,14 @@ export class DomoticzController extends RestController {
 
   /**
    * Set light switches at a specific dim value
-   * @httpPut /api/domoticz/devices/lights/dimmable/{id}/{level}
+   * @httpPut /api/domoticz/devices/lights/dimmables/{id}/{level}
    * @httpPath id {number} id of the device
-   * @httpPath level {level} level between 0 and 100
+   * @httpPath level {number} level between 0 and 100
    */
   public setLightLevel(request: Request, response: Response): Promise<void> {
-    DomoticzController.LOGGER.debug('Change dimmable level of a light, id: ' + request.params.id + ', level: ' + request.params.status);
+    DomoticzController.LOGGER.debug('Change dimmable level of a light, id: ' + request.params.id + ', level: ' + request.params.level);
     // can be switched to domoticzService
-    return this.domoticzMQTTService.setLightSwitch(request.params.id, request.params.status, 'dimmable')
+    return this.domoticzMQTTService.setLightSwitch(request.params.id, request.params.level, 'dimmable')
       .then((status: any) => {
         this.respondPlain(response, status);
       });
