@@ -31,7 +31,7 @@ export class AirfoilController extends RestController {
 
   /**
    * Enable speakers
-   * @httpPut /api/airfoil/speakers/{id}/connected
+   * @httpPut /api/airfoil/speakers/{id}/connect
    * @httpPath id {string} id of the speaker
    * @httpResponse 200 [{Speaker}]
    */
@@ -39,6 +39,21 @@ export class AirfoilController extends RestController {
     AirfoilController.LOGGER.debug('Enable speaker with id: ' + request.params.id);
 
     return this.airfoilService.setSpeakerState(request.params.id, true)
+      .then((speaker: Speaker) => {
+        return this.respondPlain(response, speaker);
+      });
+  }
+
+  /**
+   * Disable speakers
+   * @httpPut /api/airfoil/speakers/{id}/disconnect
+   * @httpPath id {string} id of the speaker
+   * @httpResponse 200 [{Speaker}]
+   */
+  public disableSpeaker(request: Request, response: Response): Promise<Response> {
+    AirfoilController.LOGGER.debug('Disable speaker with id: ' + request.params.id);
+
+    return this.airfoilService.setSpeakerState(request.params.id, false)
       .then((speaker: Speaker) => {
         return this.respondPlain(response, speaker);
       });
