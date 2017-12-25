@@ -45,30 +45,6 @@ export class DomoticzMQTTService implements BaseDomoticzService {
     );
   }
 
-  /**
-   * @param id the device id
-   * @param value new temperature as a float
-   */
-  public setTemperature(id: number, value: number): Promise<Device> {
-    let params: Array<any> = [
-      { type: 'command' },
-      { idx: id },
-      { param: 'udevice' },
-      { svalue: value },
-      { nvalue: '0' }
-    ];
-
-    let state: any = { };
-
-    return new Promise<Device>(
-      (resolve, reject) => {
-        let message: string = JSON.stringify(state);
-        this.publish(message);
-        resolve();
-      }
-    );
-  }
-
   /*********************************************************************************/
   /* start of mqtt methods */
 

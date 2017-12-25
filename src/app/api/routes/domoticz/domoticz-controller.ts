@@ -90,12 +90,12 @@ export class DomoticzController extends RestController {
    * Set the temperature
    * @httpPut /api/domoticz/devices/temperatures/{id}/{temperature}
    * @httpPath id {number} id of the device
-   * @httpPath temperature {temperature} the new temperature
+   * @httpPath temperature {number} the new temperature
    */
   public setTemperature(request: Request, response: Response): Promise<void> {
     DomoticzController.LOGGER.debug('Set the temperature, id: ' + request.params.id + ', temperature: ' + request.params.temperature);
     // can be switched to domoticzService
-    return this.domoticzMQTTService.setTemperature(request.params.id, request.params.temperature)
+    return this.domoticzService.setTemperature(request.params.id, request.params.temperature)
       .then((status: any) => {
         this.respondPlain(response, status);
       });

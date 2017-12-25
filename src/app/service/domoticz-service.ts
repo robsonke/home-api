@@ -65,10 +65,11 @@ export class DomoticzService implements BaseDomoticzService {
     let params: Array<any> = [
       { type: 'command' },
       { idx: id },
-      { param: 'udevice' },
-      { svalue: value },
-      { nvalue: '0' }
+      { param: 'setsetpoint' },
+      { setpoint: value }
     ];
+
+    //http://home.tigrou.nl:8080/json.htm?type=command&param=setsetpoint&idx=78&setpoint=19.5
 
     return this.doRequest(params);
   }
