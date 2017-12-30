@@ -16,6 +16,7 @@ export class AppConfig {
   adminPassword: string;
   mqttUser: string;
   mqttPassword: string;
+  dirbleApiToken: string;
 
   // optional environment variables
   enableHttpRequestLogging: boolean;
@@ -36,6 +37,7 @@ export class AppConfig {
     this.adminPassword = this.getStringEnvVar('ADMIN_PASSWORD');
     this.mqttUser = this.getStringEnvVar('MQTT_USER');
     this.mqttPassword = this.getStringEnvVar('MQTT_PASSWORD');
+    this.dirbleApiToken = this.getStringEnvVar('DIRBLE_API_TOKEN');
 
     // optional environment variables
     this.enableHttpRequestLogging = this.getBooleanEnvVar('ENABLE_HTTP_REQUEST_LOGGING', false);
