@@ -46,6 +46,26 @@ export class DomoticzMQTTService implements BaseDomoticzService {
   }
 
   /**
+   * A switch with several levels, like long click and double click
+   * Example url:
+   *   http://home.tigrou.nl:8080/json.htm?type=command&param=switchlight&idx=145&switchcmd=Set%20Level&level=20
+   *
+   * @param id the idx of the device
+   * @param status 10/20/30/etc depending on the device settings
+   */
+  public setMultiSwitch(id: number, level: number): Promise<Device> {
+    let state: any = { command: 'switchlight', idx: +id, switchcmd: 'Set Level', level: +level };
+
+    return new Promise<Device>(
+      (resolve, reject) => {
+        let message: string = JSON.stringify(state);
+        this.publish(message);
+        resolve();
+      }
+    );
+  }
+
+  /**
    * @param id the device id
    * @param value new temperature as a float
    */

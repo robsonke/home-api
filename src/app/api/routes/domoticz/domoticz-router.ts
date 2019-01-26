@@ -22,6 +22,7 @@ export class DomoticzRouter extends RestRouter {
     this.router.get('/devices/lights/switches', (request: Request, response: Response, next: any) => this.domoticzCtrl.getLightSwitches(request, response));
     this.router.put('/devices/lights/switches/:id/:status', (request: Request, response: Response, next: any) => this.domoticzCtrl.setLightSwitch(request, response));
     this.router.put('/devices/lights/dimmables/:id/:level', (request: Request, response: Response, next: any) => this.domoticzCtrl.setLightLevel(request, response));
+    this.router.put('/devices/switches/multi/:id/:level', (request: Request, response: Response, next: any) => this.domoticzCtrl.setMultiSwitch(request, response));
 
   }
 }

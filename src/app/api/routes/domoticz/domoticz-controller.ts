@@ -74,12 +74,26 @@ export class DomoticzController extends RestController {
   }
 
   /**
+   * Set multi switch levels
+   * @httpPut /api/domoticz/devices/switches/multi/{id}/{level}
+   * @httpPath id {number} id of the device
+   * @httpPath level {number} 10/20/30/40/50 depending on the device settings
+   */
+  public setMultiSwitch(request: Request, response: Response): Promise<void> {
+    DomoticzController.LOGGER.debug('Set multi switch, id: ' + request.params.id + ', level: ' + request.params.level);
+    // can be switched to domoticzService
+    return this.domoticzMQTTService.setMultiSwitch(request.params.id, request.params.level)
+      .then((status: any) => {
+        this.respondPlain(response, status);
+      });
+  }
+
+  /**
    * Get all temperature devices
    * @httpGet /api/domoticz/devices/temperatures
    */
   public getTemperatures(request: Request, response: Response): Promise<Response> {
     DomoticzController.LOGGER.debug('Retrieving all temperature devices');
-    // can be switched to domoticzService
     return this.domoticzService.getDevices('temperature')
       .then((switches: any) => {
         return this.respondPlain(response, switches);
