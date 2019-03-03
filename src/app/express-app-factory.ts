@@ -1,3 +1,4 @@
+import { RingService } from './service/ring-service';
 import { Express, Router, RequestHandler, ErrorRequestHandler } from 'express';
 import { AppConfig } from './config';
 import express = require('express');
@@ -11,8 +12,10 @@ import red = require('node-red');
 import http = require('http');
 import path = require('path');
 import fs = require('fs');
+import ringAPI = require('doorbot');
 
 import * as basicAuth from 'express-basic-auth';
+import { SonosService } from './service/sonos-service';
 
 
 export class ExpressAppFactory {
@@ -121,7 +124,7 @@ export class ExpressAppFactory {
     }
 
     if (preApiRouterMiddlewareFns != null) {
-      postApiRouterMiddlewareFns.forEach((middlewareFn) => app.use(middlewareFn));
+      preApiRouterMiddlewareFns.forEach((middlewareFn) => app.use(middlewareFn));
     }
 
     app.use('/api', apiRouter);
@@ -129,6 +132,16 @@ export class ExpressAppFactory {
     if (postApiRouterMiddlewareFns != null) {
       postApiRouterMiddlewareFns.forEach((middlewareFn) => app.use(middlewareFn));
     }
+
+    // ring doorbell watcher
+    const ring = ringAPI({
+        email: appConfig.ringUser,
+        password: appConfig.ringPassword,
+        retries: 10, api_version: 11, timeout: (10 * 60 * 1000)
+    });
+
+    let ringService = new RingService(appConfig, new SonosService(appConfig));
+    ringService.checkRingDeviceEvent(ring);
 
     return app;
   }

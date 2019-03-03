@@ -17,6 +17,9 @@ export class AppConfig {
   mqttUser: string;
   mqttPassword: string;
   dirbleApiToken: string;
+  ringUser: string;
+  ringPassword: string;
+  sonosHttpApiUrl: string;
 
   // optional environment variables
   enableHttpRequestLogging: boolean;
@@ -38,6 +41,9 @@ export class AppConfig {
     this.mqttUser = this.getStringEnvVar('MQTT_USER');
     this.mqttPassword = this.getStringEnvVar('MQTT_PASSWORD');
     this.dirbleApiToken = this.getStringEnvVar('DIRBLE_API_TOKEN');
+    this.ringUser = this.getStringEnvVar('RING_USER');
+    this.ringPassword = this.getStringEnvVar('RING_PASSWORD');
+    this.sonosHttpApiUrl = this.getStringEnvVar('SONOR_HTTP_API_URL');
 
     // optional environment variables
     this.enableHttpRequestLogging = this.getBooleanEnvVar('ENABLE_HTTP_REQUEST_LOGGING', false);
